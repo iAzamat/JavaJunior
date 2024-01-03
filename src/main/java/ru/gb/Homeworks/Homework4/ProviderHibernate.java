@@ -8,42 +8,38 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-
 public class ProviderHibernate {
-
-    private Configuration cfg;
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
     private Session session;
-    ProviderHibernate(){
-//        cfg = new Configuration().addResource("hibernate.cfg.xml");
-//        sessionFactory = cfg.buildSessionFactory();
-        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure()
-                .build();
-        sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
-//        sessionFactory = cfg.buildSessionFactory(builder.build());
+
+    ProviderHibernate() {
+//        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+//                .configure()
+//                .build();
+//        sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        sessionFactory = new Configuration()
+                .configure("hibernate3.cfg.xml").buildSessionFactory();
     }
-    public void connect(){
+
+    public void connect() {
         session = sessionFactory.openSession();
         System.out.println("Hibernate connected");
     }
 
-    public void disconect(){
+    public void disconnect() {
         session.close();
         System.out.println("Hibernate disconnected");
     }
 
-    public void insertIntoTable(Object object){
+    public void insertIntoTable(Object object) {
         if (session != null && object != null) {
             Transaction transaction = session.beginTransaction();
             session.save(object);
             transaction.commit();
         }
     }
-    public void updateIntoTable(Object object){
+
+    public void updateIntoTable(Object object) {
         if (session != null && object != null) {
             Transaction transaction = session.beginTransaction();
             session.update(object);
@@ -51,7 +47,7 @@ public class ProviderHibernate {
         }
     }
 
-    public Object uploadFromTable(int id){
+    public Object uploadFromTable(int id) {
         if (session != null) {
             return session.get(Object.class, id);
         }
@@ -65,7 +61,6 @@ public class ProviderHibernate {
             transaction.commit();
         }
     }
-
 
 
 }

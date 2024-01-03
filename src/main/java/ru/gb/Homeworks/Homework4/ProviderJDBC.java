@@ -2,15 +2,13 @@ package ru.gb.Homeworks.Homework4;
 
 import java.lang.reflect.*;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProviderJDBC {
     private String url;
     private String user;
     private String password;
 
-    public static String typeToSQLtype(Object o){
+    public static String typeToSQLtype(Object o) {
         String result = null;
         if (o.equals(Boolean.class)) result = "BIT(1)";
         if (o.equals(Byte.class)) result = "TINYINT";
@@ -24,23 +22,24 @@ public class ProviderJDBC {
     }
 
 
-
     private Connection _connection;
-    public ProviderJDBC(String url, String user, String password){
+
+    public ProviderJDBC(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
     }
 
-    public void connect(){
+    public void connect() {
         try {
-            _connection =  DriverManager.getConnection(url, user, password);
+            _connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection created " + url + "/" + user + "/");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Connection fault: " + e.getMessage());
         }
     }
-    public void disconnect(){
+
+    public void disconnect() {
         if (_connection != null) {
             try {
                 _connection.close();
@@ -52,12 +51,12 @@ public class ProviderJDBC {
     }
 
 
-    public void createDB(String name){
+    public void createDB(String name) {
         if (_connection != null && name != null) {
             try {
                 Statement tempStatement = _connection.createStatement();
-                tempStatement.execute("DROP SCHEMA IF EXISTS " +  name);
-                tempStatement.execute("CREATE SCHEMA " +  name);
+                tempStatement.execute("DROP SCHEMA IF EXISTS " + name);
+                tempStatement.execute("CREATE SCHEMA " + name);
                 System.out.println("DB create: " + name + " created");
             } catch (SQLException e) {
                 System.out.println("DB create: " + e.getMessage());
@@ -65,11 +64,11 @@ public class ProviderJDBC {
         }
     }
 
-    public void deleteDB(String name){
+    public void deleteDB(String name) {
         if (_connection != null && name != null) {
             try {
                 Statement tempStatement = _connection.createStatement();
-                tempStatement.execute("DROP SCHEMA IF EXISTS " +  name);
+                tempStatement.execute("DROP SCHEMA IF EXISTS " + name);
                 System.out.println("DB delete: " + name + " deleted");
             } catch (SQLException e) {
                 System.out.println("DB delete: " + e.getMessage());
@@ -77,18 +76,18 @@ public class ProviderJDBC {
         }
     }
 
-    public void createTable(String DB, String table, Class object){
+    public void createTable(String DB, String table, Class object) {
         if (_connection != null) {
             if (table == null) table = object.getName();
             try {
                 Statement tempStatement = _connection.createStatement();
-                tempStatement.execute("USE " +  DB);
-                tempStatement.execute("DROP TABLE IF EXISTS " +  table);
+                tempStatement.execute("USE " + DB);
+                tempStatement.execute("DROP TABLE IF EXISTS " + table);
                 StringBuilder tempExecute = new StringBuilder();
-                tempExecute.append("CREATE TABLE " +  table + "(");
+                tempExecute.append("CREATE TABLE " + table + "(");
                 tempExecute.append("id INT NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT");
                 Field[] fields = object.getDeclaredFields();
-                for (Field field: fields) {
+                for (Field field : fields) {
                     if (typeToSQLtype(field.getAnnotatedType().getType()) != null) {
                         tempExecute.append("," + field.getName() + " " + typeToSQLtype(field.getAnnotatedType().getType()));
                     }
@@ -124,7 +123,7 @@ public class ProviderJDBC {
                 StringBuilder tempExecute = new StringBuilder();
                 tempExecute.append("INSERT INTO " + table + "(");
                 Field[] fields = values.getClass().getDeclaredFields();
-                for (Field field: fields) {
+                for (Field field : fields) {
                     if (typeToSQLtype(field.getAnnotatedType().getType()) != null) {
                         tempExecute.append(field.getName() + ", ");
                     }
@@ -132,10 +131,10 @@ public class ProviderJDBC {
                 tempExecute.delete(tempExecute.length() - 2, tempExecute.length());
                 tempExecute.append(", objectSignature)");
                 tempExecute.append(" VALUES (");
-                for (Field field: fields) {
+                for (Field field : fields) {
 
                     if (typeToSQLtype(field.getAnnotatedType().getType()) != null) {
-                       tempExecute.append("'" + field.get(values).toString() + "'" + ", ");
+                        tempExecute.append("'" + field.get(values).toString() + "'" + ", ");
                     }
                 }
                 tempExecute.append("'" + values.toString() + "')");
@@ -153,7 +152,7 @@ public class ProviderJDBC {
                 Statement tempStatement = _connection.createStatement();
                 tempStatement.execute("USE " + DB);
                 StringBuilder tempExecute = new StringBuilder();
-                tempExecute.append("DELETE FROM " + table + " WHERE objectSignature = '" + values.toString() + "'" );
+                tempExecute.append("DELETE FROM " + table + " WHERE objectSignature = '" + values.toString() + "'");
                 tempStatement.execute(tempExecute.toString());
                 System.out.println("Table delete: " + table + " row deleted");
             } catch (SQLException e) {
@@ -168,11 +167,11 @@ public class ProviderJDBC {
                 Statement tempStatement = _connection.createStatement();
                 tempStatement.execute("USE " + DB);
                 StringBuilder tempExecute = new StringBuilder();
-                tempExecute.append("UPDATE " + table + " SET " );
+                tempExecute.append("UPDATE " + table + " SET ");
 
                 Field[] fields = values.getClass().getDeclaredFields();
 
-                for (Field field: fields) {
+                for (Field field : fields) {
 
                     if (typeToSQLtype(field.getAnnotatedType().getType()) != null) {
                         tempExecute.append(field.getName() + " = " + "'" + field.get(values).toString() + "'" + ", ");
@@ -180,7 +179,7 @@ public class ProviderJDBC {
                 }
                 tempExecute.delete(tempExecute.length() - 2, tempExecute.length());
 
-                tempExecute.append(" WHERE objectSignature = '" + values.toString() + "'" );
+                tempExecute.append(" WHERE objectSignature = '" + values.toString() + "'");
                 tempStatement.execute(tempExecute.toString());
                 System.out.println("Table update: " + table + " row updated");
             } catch (SQLException | IllegalAccessException e) {
@@ -195,50 +194,50 @@ public class ProviderJDBC {
                 Statement tempStatement = _connection.createStatement();
                 tempStatement.execute("USE " + DB);
                 StringBuilder tempExecute = new StringBuilder();
-                tempExecute.append("SELECT * FROM " + table + " WHERE objectSignature = '" + values.toString() + "'" );
+                tempExecute.append("SELECT * FROM " + table + " WHERE objectSignature = '" + values.toString() + "'");
                 ResultSet set = tempStatement.executeQuery(tempExecute.toString());
                 Method[] methods = values.getClass().getMethods();
 
-                for (Method method: methods) {
+                for (Method method : methods) {
                     for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
-                        if (method.getName().toLowerCase().equals("set" + set.getMetaData().getColumnName(i))){
+                        if (method.getName().toLowerCase().equals("set" + set.getMetaData().getColumnName(i))) {
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Boolean.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getBoolean(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Byte.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getByte(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Short.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getShort(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Integer.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getInt(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Long.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getLong(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Float.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getFloat(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Double.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getDouble(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(String.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getString(i));
                                 }
 
@@ -260,50 +259,50 @@ public class ProviderJDBC {
                 Statement tempStatement = _connection.createStatement();
                 tempStatement.execute("USE " + DB);
                 StringBuilder tempExecute = new StringBuilder();
-                tempExecute.append("SELECT * FROM " + table + " WHERE objectSignature = '" + values.toString() + "'" );
+                tempExecute.append("SELECT * FROM " + table + " WHERE objectSignature = '" + values.toString() + "'");
                 ResultSet set = tempStatement.executeQuery(tempExecute.toString());
                 Method[] methods = values.getClass().getMethods();
 
-                for (Method method: methods) {
+                for (Method method : methods) {
                     for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
-                        if (method.getName().toLowerCase().equals("set" + set.getMetaData().getColumnName(i))){
+                        if (method.getName().toLowerCase().equals("set" + set.getMetaData().getColumnName(i))) {
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Boolean.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getBoolean(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Byte.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getByte(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Short.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getShort(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Integer.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getInt(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Long.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getLong(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Float.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getFloat(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(Double.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getDouble(i));
                                 }
                             }
                             if (set.getMetaData().getColumnClassName(i).getClass().equals(String.class)) {
-                                if(set.next()) {
+                                if (set.next()) {
                                     method.invoke(values, set.getString(i));
                                 }
 

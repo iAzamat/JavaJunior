@@ -4,15 +4,17 @@ public class JDBCBook {
     private static int count;
     String name;
     String author;
-    JDBCBook(){
+
+    JDBCBook() {
         this.name = this.getClass().getName() + count;
         this.author = this.getClass().getName() + count + " author";
-        count ++;
+        count++;
     }
-    JDBCBook(String name, String author){
+
+    JDBCBook(String name, String author) {
         this.name = name;
         this.author = author;
-        count ++;
+        count++;
     }
 
     public void setName(String name) {

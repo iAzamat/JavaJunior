@@ -1,8 +1,9 @@
 package ru.gb.Homeworks.Homework4;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 @Entity
-@Table (name = "HibernateShelf")
+@Table(name = "HibernateShelf")
 public class HibernateBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,7 @@ public class HibernateBook {
         this.name = name;
         this.author = author;
     }
+
     public void setName(String name) {
         this.name = name;
     }

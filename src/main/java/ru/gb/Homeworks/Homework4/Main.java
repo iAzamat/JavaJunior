@@ -1,7 +1,8 @@
 package ru.gb.Homeworks.Homework4;
+
 public class Main {
     public static void main(String[] args) {
-        final String DB_URL = "jdbc:mysql://localhost:32769";
+        final String DB_URL = "jdbc:mysql://localhost:3306";
         final String DB_USER = "root";
         final String DB_PASSWORD = "admin";
         final String DB_Name = "LibraryShelf";
@@ -11,6 +12,7 @@ public class Main {
         providerJDBC.connect();
         providerJDBC.createDB(DB_Name);
         providerJDBC.createTable(DB_Name, "JDBCshelf", JDBCBook.class);
+
         JDBCBook JDBCBook1 = new JDBCBook("Book 1", "Author 1");
         JDBCBook JDBCBook2 = new JDBCBook("Book 2", "Author 2");
         JDBCBook JDBCBook3 = new JDBCBook("Book 3", "Author 3");
@@ -21,6 +23,7 @@ public class Main {
         JDBCBook JDBCBook8 = new JDBCBook();
         JDBCBook JDBCBook9 = new JDBCBook();
         JDBCBook JDBCBook10 = new JDBCBook();
+
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook1);
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook2);
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook3);
@@ -31,14 +34,18 @@ public class Main {
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook8);
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook9);
         providerJDBC.insertIntoTable(DB_Name, "JDBCshelf", JDBCBook10);
+
         JDBCBook3.setName("new book 3 name");
         providerJDBC.updateIntoTable(DB_Name, "JDBCshelf", JDBCBook3);
+
         JDBCBook4 = (JDBCBook) providerJDBC.findIntoTable(DB_Name, "JDBCshelf", JDBCBook2);
         System.out.println("Book 4 name: " + JDBCBook4.name + "/author: " + JDBCBook4.author);
         providerJDBC.disconnect();
+
         //2.1 - 2.3
         ProviderHibernate providerHibernate = new ProviderHibernate();
         providerHibernate.connect();
+
         HibernateBook hibernateBook1 = new HibernateBook("Book 1", "Author 1");
         HibernateBook hibernateBook2 = new HibernateBook("Book 2", "Author 2");
         HibernateBook hibernateBook3 = new HibernateBook("Book 3", "Author 3");
@@ -49,6 +56,7 @@ public class Main {
         HibernateBook hibernateBook8 = new HibernateBook("Book 8", "Author 8");
         HibernateBook hibernateBook9 = new HibernateBook("Book 9", "Author 9");
         HibernateBook hibernateBook10 = new HibernateBook("Book 10", "Author 10");
+
         providerHibernate.insertIntoTable(hibernateBook1);
         providerHibernate.insertIntoTable(hibernateBook2);
         providerHibernate.insertIntoTable(hibernateBook3);
@@ -61,10 +69,10 @@ public class Main {
         providerHibernate.insertIntoTable(hibernateBook10);
 
         hibernateBook3.setName("Book 3 renamed");
-
-        providerHibernate.deleteIntoTable(hibernateBook2);
         providerHibernate.updateIntoTable(hibernateBook3);
 
-        providerHibernate.disconect();
+        providerHibernate.deleteIntoTable(hibernateBook2);
+
+        providerHibernate.disconnect();
     }
 }
