@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class Jpa {
-    //01:37:33
     public static void main(String[] args) throws SQLException {
         // JPA Java Persistence API - набор правил (соглашений) по реализации доменной модели
         // Entity

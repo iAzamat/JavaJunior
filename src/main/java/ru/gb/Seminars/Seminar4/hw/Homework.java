@@ -23,7 +23,7 @@ public class Homework {
   /**
    * ДЗ для преподавателя:
    * 1. Разобраться с jdbc:h2:file
-   * 2. Подготовить расказ про PreparedStatement и SqlInjection
+   * 2. Подготовить расcказ про PreparedStatement и SqlInjection
    */
 
 }

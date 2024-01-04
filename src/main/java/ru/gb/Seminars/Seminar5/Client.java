@@ -1,11 +1,13 @@
-package ru.gb.Homeworks.Homework5;
+package ru.gb.Seminars.Seminar5;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Client {
+
     public static void main(String[] args) throws IOException {
         final Socket client = new Socket("localhost", Server.PORT);
         // чтение
@@ -26,7 +28,7 @@ public class Client {
                 while (true) {
                     String consoleInput = consoleScanner.nextLine();
                     output.println(consoleInput);
-                    if (consoleInput.toLowerCase().equals("q")) {
+                    if (Objects.equals("q", consoleInput)) {
                         client.close();
                         break;
                     }
@@ -35,5 +37,8 @@ public class Client {
                 throw new RuntimeException(e);
             }
         }).start();
+
     }
 }
+
+

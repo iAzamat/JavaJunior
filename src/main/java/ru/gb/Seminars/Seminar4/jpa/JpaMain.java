@@ -6,7 +6,7 @@ import java.sql.Statement;
 
 public class JpaMain {
 
-  public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
 //    try (Session session = HibernateUtil.getSession()) {
 //      session.beginTransaction();
 //      User user = new User();
@@ -35,19 +35,19 @@ public class JpaMain {
 //      }
 //    }
 
-  }
-
-  private static void createTables(Connection connection) throws SQLException {
-    try (Statement statement = connection.createStatement()) {
-      statement.execute("create table if not exists user(id bigint, name varchar(256))");
     }
-  }
 
-  private static void insertData(Connection connection) throws SQLException {
-    try (Statement statement = connection.createStatement()) {
-      statement.execute("insert into user(id, name) values(1, 'Igor')");
-      statement.execute("insert into user(id, name) values(2, 'Igor')");
+    private static void createTables(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("create table if not exists user(id bigint, name varchar(256))");
+        }
     }
-  }
+
+    private static void insertData(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("insert into user(id, name) values(1, 'Igor')");
+            statement.execute("insert into user(id, name) values(2, 'Igor')");
+        }
+    }
 
 }
